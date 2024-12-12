@@ -1,0 +1,559 @@
+{
+	"info": {
+		"_postman_id": "9f4b1544-fe91-484a-95d3-6ce30bd58e97",
+		"name": "NODE_Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10165238"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"user3\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response JSON\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"// Set the 'access_token' in the environment\r",
+									"pm.environment.set(\"accesstoken\", response.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"user3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/refresh",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var schema = {\r",
+									"    \"type\": \"array\",\r",
+									"    \"items\": {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"id\": { \"type\": \"number\" },\r",
+									"            \"first_name\": { \"type\": \"string\" },\r",
+									"            \"last_name\": { \"type\": \"string\" },\r",
+									"            \"username\": { \"type\": \"string\" },\r",
+									"            \"password\": { \"type\": \"string\" },\r",
+									"            // \"age\":{\"type\": [\"number\", \"null\"]}\r",
+									"        },\r",
+									"        \"required\": [\"id\", \"first_name\", \"last_name\", \"username\", \"password\"],\r",
+									"        \"additionalProperties\": false\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"var data1 = pm.response.json();\r",
+									"\r",
+									"pm.test('Schema is valid', function() { \r",
+									"  pm.expect(tv4.validate(data1, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "specific user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": { \"type\": \"number\" },\r",
+									"        \"first_name\": { \"type\": \"string\" },\r",
+									"        \"last_name\": { \"type\": \"string\" },\r",
+									"        \"username\": { \"type\": \"string\" },\r",
+									"        \"age\":{\"type\": [\"number\", \"null\"]}\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"first_name\", \"last_name\", \"username\", \"age\"],\r",
+									"    \"additionalProperties\": false\r",
+									"};\r",
+									"\r",
+									"var data1 = pm.response.json();\r",
+									"\r",
+									"pm.test('Schema is valid', function() { \r",
+									"  pm.expect(tv4.validate(data1, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/6",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response JSON\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"// Set the 'access_token' in the environment\r",
+									"pm.environment.set(\"userId\", response.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"user_bidon\",\r\n    \"last_name\":\"bidon\",\r\n    \"username\":\"monsieur user\",\r\n    \"password\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{       \r\n    \"first_name\": \"Arnaud\",\r\n    \"last_name\": \"Norel\",\r\n    \"username\": \"arnolito\",\r\n    \"password\": \"password\",\r\n    \"age\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/users/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{       \r\n    \"first_name\": \"Arnaud\",\r\n    \"last_name\": \"Norel\",\r\n    \"username\": \"arnolito\",\r\n    \"password\": \"password\",\r\n    \"age\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/users/{{userId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "note",
+			"item": [
+				{
+					"name": "notes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var schema = {\r",
+									"    \"type\": \"array\",\r",
+									"    \"items\": {\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"id\": { \"type\": \"number\" },\r",
+									"            \"first_name\": { \"type\": \"string\" },\r",
+									"            \"last_name\": { \"type\": \"string\" },\r",
+									"            \"username\": { \"type\": \"string\" },\r",
+									"            \"password\": { \"type\": \"string\" },\r",
+									"            // \"age\":{\"type\": [\"number\", \"null\"]}\r",
+									"        },\r",
+									"        \"required\": [\"id\", \"first_name\", \"last_name\", \"username\", \"password\"],\r",
+									"        \"additionalProperties\": false\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"var data1 = pm.response.json();\r",
+									"\r",
+									"pm.test('Schema is valid', function() { \r",
+									"  pm.expect(tv4.validate(data1, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/note?userId=4",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"note"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "note",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"id\": { \"type\": \"number\" },\r",
+									"        \"first_name\": { \"type\": \"string\" },\r",
+									"        \"last_name\": { \"type\": \"string\" },\r",
+									"        \"username\": { \"type\": \"string\" },\r",
+									"        \"age\":{\"type\": [\"number\", \"null\"]}\r",
+									"    },\r",
+									"    \"required\": [\"id\", \"first_name\", \"last_name\", \"username\", \"age\"],\r",
+									"    \"additionalProperties\": false\r",
+									"};\r",
+									"\r",
+									"var data1 = pm.response.json();\r",
+									"\r",
+									"pm.test('Schema is valid', function() { \r",
+									"  pm.expect(tv4.validate(data1, schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accesstoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/note/2",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"note",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "note",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response JSON\r",
+									"const response = pm.response.json();\r",
+									"\r",
+									"// Set the 'access_token' in the environment\r",
+									"pm.environment.set(\"noteId\", response.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"Nulla\",\r\n    \"content\":\"Nulla eget dignissim elit. Cras risus nisi, viverra id velit et, auctor dignissim velit. Nulla pharetra eleifend vestibulum. Nulla elit odio, fermentum eu aliquet a, viverra quis orci. Ut in consequat nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et nisi non velit tincidunt gravida eget et dui. Mauris posuere condimentum mauris eget vulputate. Curabitur ut risus vel nisi consequat placerat. Quisque tempus efficitur nibh, in interdum ipsum rutrum fermentum. Quisque imperdiet ornare purus quis faucibus. Aliquam lectus nisi, ultrices at viverra a, dictum in enim.\",\r\n    \"ownerId\":5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/note",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"note"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "note",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"LoremIpsum\",\r\n    \"content\": \"Lorem Ipsum Cras risus nisi, viverra id velit et, auctor dignissim velit. Nulla pharetra eleifend vestibulum. Nulla elit odio, fermentum eu aliquet a, viverra quis orci. Ut in consequat nulla. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et nisi non velit tincidunt gravida eget et dui. Mauris posuere condimentum mauris eget vulputate. Curabitur ut risus vel nisi consequat placerat. Quisque tempus efficitur nibh, in interdum ipsum rutrum fermentum. Quisque imperdiet ornare purus quis faucibus. Aliquam lectus nisi, ultrices at viverra a, dictum in enim.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/note/4",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"note",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "note",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{       \r\n    \"first_name\": \"Arnaud\",\r\n    \"last_name\": \"Norel\",\r\n    \"username\": \"arnolito\",\r\n    \"password\": \"password\",\r\n    \"age\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/note/{{noteId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"note",
+								"{{noteId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": []
+		}
+	]
+}
