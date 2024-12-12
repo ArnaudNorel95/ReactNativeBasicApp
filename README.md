@@ -5,7 +5,7 @@
 - refer to README inside my-nest-backend
 - use and restore dump.sql to load existing datas
 ```bash
-$ psql -U <username> -d <dbname> -f "dump.sql"
+$ psql -U username -d dbname < dump.sql
 ```
 - before running API don't forget to create a .env file with following infos:
 ```bash
